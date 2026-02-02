@@ -24,11 +24,24 @@ const userSchema = new mongoose.Schema({
         ref:'Mess'},
         name:{
             type:String,
-        }
+        },
+        meal:{type:Number,
+            default:0
+        },
+        remmoney:{type:Float16Array,
+            default:0
+        },
+        mealrate:{type:Float16Array,
+            default:0
+        }, 
 },
     imageUrl:{
         type:String,
-    }
+    },
+    isManager:{
+    type:Boolean,
+    default:false
+   } 
 
 })
 module.exports =mongoose.model('User',userSchema);

@@ -6,8 +6,18 @@ const messSchema = new mongoose.Schema({
     },
     address:{type:String},
     members:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
+        id:{type:mongoose.Schema.Types.ObjectId,
+        ref:'User'},
+        name:String,
+        meal:{type:Number,
+            default:0
+        },
+        remmoney:{type:Float16Array,
+            default:0
+        },
+        mealrate:{type:Float16Array,
+            default:0
+        },
     }],
     managerId:{
         type:mongoose.Schema.Types.ObjectId,

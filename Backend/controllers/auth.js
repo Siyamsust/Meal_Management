@@ -26,11 +26,7 @@ exports.Signup=async(req,res)=>{
  );
  res.status(201).json({
     token,
-    user: {
-        _id:user._id,
-        name:user.name,
-        email:user.email
-    }
+    user: user
  })
 }
 catch(error)
@@ -65,11 +61,7 @@ catch(error)
     
         res.json({
           token,
-          user: {
-            _id: user._id,
-            name: user.name,
-            email: user.email
-          }
+          user: user
         });
       } catch (error) {
         console.error('Login error:', error);

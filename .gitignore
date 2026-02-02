@@ -1,15 +1,18 @@
 # Node.js dependencies
-backend/node_modules/
+Backend/node_modules/
 my-app/node_modules/
 
-
 # Environment variables
-*.env
+Backend/.env
+my-app/.env
 
 # Build files
-my-app/build/
+Backend/dist/
 my-app/dist/
-backend/dist/
+my-app/web-build/
+
+# Expo specific (in my-app)
+my-app/.expo/
 
 # Logs
 *.log
