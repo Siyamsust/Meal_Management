@@ -25,7 +25,7 @@ export default function CreateMessModal({
     try {
       const token = await AsyncStorage.getItem('authToken');
       
-      const response = await fetch('http://192.168.0.110:3000/api/mess/create', {
+      const response = await fetch('http://192.168.0.101:3000/api/mess/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
