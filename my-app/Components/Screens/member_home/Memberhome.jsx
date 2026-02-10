@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity ,SafeAreaViewBase} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './Memberhome.styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 export default function Memberhome() {
-  const navigate=useNavigation();
+  const navigate = useNavigation();
 
   const summaryData = {
     currentBalance: 250.00,
@@ -39,40 +39,37 @@ export default function Memberhome() {
   const maxMealCount = Math.max(...mealTrends.map(m => m.count));
 
   return (
-    <View style={styles.container}>
-      {/* Sidebar */}
-     
-
-      {/* Main Content */}
+    <SafeAreaView style={styles.container}>
       <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
-      <SafeAreaView>
-        <Text style={styles.dashboardTitle}>Dashboard</Text>
+        <View style={styles.quickStatsContainer}>
+          <Text style={styles.dashboardTitle}>Dashboard</Text>
 
-        {/* Summary Cards */}
-        <View style={styles.summaryCards}>
-          <View style={styles.card}>
-            <Text style={styles.cardValue}>${summaryData.currentBalance.toFixed(2)}</Text>
-            <Text style={styles.cardLabel}>Current Balance</Text>
-          </View>
+          {/* Summary Cards */}
+          <View style={styles.summaryCards}>
+            <View style={styles.card}>
+              <Text style={styles.cardValue}>${summaryData.currentBalance.toFixed(2)}</Text>
+              <Text style={styles.cardLabel}>Current Balance</Text>
+            </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardValue}>{summaryData.totalMeals}</Text>
-            <Text style={styles.cardLabel}>Total Meals</Text>
-          </View>
+            <View style={styles.card}>
+              <Text style={styles.cardValue}>{summaryData.totalMeals}</Text>
+              <Text style={styles.cardLabel}>Total Meals</Text>
+            </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardValue}>${summaryData.totalExpense.toFixed(2)}</Text>
-            <Text style={styles.cardLabel}>Total Expense</Text>
-          </View>
+            <View style={styles.card}>
+              <Text style={styles.cardValue}>${summaryData.totalExpense.toFixed(2)}</Text>
+              <Text style={styles.cardLabel}>Total Expense</Text>
+            </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardValue}>${summaryData.shoppingCost.toFixed(2)}</Text>
-            <Text style={styles.cardLabel}>Shopping Cost</Text>
+            <View style={styles.card}>
+              <Text style={styles.cardValue}>${summaryData.shoppingCost.toFixed(2)}</Text>
+              <Text style={styles.cardLabel}>Shopping Cost</Text>
+            </View>
           </View>
         </View>
 
-        {/* Charts Row */}
-        <View style={styles.chartsRow}>
+        {/* Charts Section */}
+        <View style={styles.chartsSection}>
           {/* Meal Trends Chart */}
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Meal Trends</Text>
@@ -107,37 +104,14 @@ export default function Memberhome() {
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Expense Breakdown</Text>
             <View style={styles.donutChartContainer}>
-              <View style={styles.donutChart}>
-                <View style={styles.donutChartInner} />
-                {/* Simple donut representation using colored segments */}
-                <View style={styles.donutChartSegments}>
-                  <View
-                    style={[
-                      styles.donutSegment,
-                      { backgroundColor: expenseBreakdown[0].color, width: '60%' },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.donutSegment,
-                      { backgroundColor: expenseBreakdown[1].color, width: '25%' },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.donutSegment,
-                      { backgroundColor: expenseBreakdown[2].color, width: '15%' },
-                    ]}
-                  />
-                </View>
-              </View>
-              <View style={styles.donutChartLegend}>
+              <View style={styles.progressCirclesContainer}>
                 {expenseBreakdown.map((item, index) => (
-                  <View key={index} style={styles.legendItem}>
-                    <View
-                      style={[styles.legendCircle, { backgroundColor: item.color }]}
-                    />
-                    <Text style={styles.legendText}>{item.category}</Text>
+                  <View key={index} style={styles.progressCircleWrapper}>
+                    <View style={[styles.progressCircle, { borderWidth: 4, borderColor: item.color }]}>
+                      <Text style={styles.progressPercentage}>{item.percentage}%</Text>
+                    </View>
+                    <Text style={styles.progressLabel}>{item.category}</Text>
+                    <Text style={styles.progressAmount}>${item.amount}</Text>
                   </View>
                 ))}
               </View>
@@ -152,8 +126,10 @@ export default function Memberhome() {
             {recentActivity.map((activity, index) => (
               <View key={index} style={styles.activityItem}>
                 <View style={styles.activityLeft}>
-                  <Text style={styles.activityDate}>{activity.date}</Text>
-                  <Text style={styles.activityType}>{activity.type}</Text>
+                  <View>
+                    <Text style={styles.activityType}>{activity.type}</Text>
+                    <Text style={styles.activityDate}>{activity.date}</Text>
+                  </View>
                 </View>
                 <Text style={styles.activityAmount}>
                   ${activity.amount.toFixed(2)}
@@ -162,10 +138,8 @@ export default function Memberhome() {
             ))}
           </View>
         </View>
-        </SafeAreaView>
       </ScrollView>
-    
-    </View>
+    </SafeAreaView>
   );
 }
 

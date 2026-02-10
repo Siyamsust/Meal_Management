@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import Memberhome from "../member_home/Memberhome";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Settings from "../Settings/Settings";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthContext } from "../../../Context/Authcontext";
 import Modali from "./Modal";
 import CreateMessModal from "../../CreateMessModal/CreateMessModal";
+import ManagerDashboard from "../Manager_home/Manager_home";
 const Tab = createBottomTabNavigator();
 
 // Dummy component for Plus button
@@ -24,6 +25,13 @@ export default function TabNavigator() {
   useEffect(() => {
     loadUserData();
   }, []);
+
+  useEffect(() => {
+    // Reload user data when isLoggedIn changes
+    if (isLoggedIn) {
+      loadUserData();
+    }
+  }, [isLoggedIn]);
 
   const loadUserData = async () => {
     try {
@@ -42,7 +50,9 @@ export default function TabNavigator() {
 
   console.log("TabNavigator isLoggedIn:", isLoggedIn);
   console.log("User Data:", userData);
-  console.log("User Mess:",userData.mess.managerId);
+  if (userData) {
+    console.log("User Mess:", userData.mess);
+  }
   const handleMessCreated = (updatedUser) => {
     setUserData(updatedUser);
     setShowCreateMessModal(false);
@@ -80,6 +90,15 @@ export default function TabNavigator() {
     );
   }
 
+  // Show error if userData couldn't be loaded
+  if (!userData) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Unable to load user data. Please try logging in again.</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <Tab.Navigator
@@ -99,13 +118,22 @@ export default function TabNavigator() {
           tabBarInactiveTintColor: "gray",
           headerShown: false,
         })}
-      >
-        <Tab.Screen name="Home" component={Memberhome} />
-      { userData.mess.managerId===userData._id&&<Tab.Screen name="Cash" component={Memberhome} />
-
-}
-{ userData.mess.managerId===userData._id&&<Tab.Screen name="AddMeal" component={Memberhome} />
-}
+      > 
+      {userData?.isManager ? (
+          <Tab.Screen 
+            name="Home" 
+            children={() => <ManagerDashboard userData={userData} />}
+          />
+        ) : (
+          <Tab.Screen name="Home" component={Memberhome} />
+        )}
+        
+        {userData?.isManager  && (
+          <Tab.Screen name="Cash" component={Memberhome} />
+        )}
+        {userData?.isManager  && (
+          <Tab.Screen name="AddMeal" component={Memberhome} />
+        )}
         {userData?.mess ? (
           <Tab.Screen name="Activity" component={Memberhome} />
         ) : (

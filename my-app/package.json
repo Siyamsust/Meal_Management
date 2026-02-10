@@ -32,5 +32,8 @@
     "react-native-vector-icons": "^10.3.0",
     "socket.io-client": "^4.8.1"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "baseline-browser-mapping": "^2.9.19"
+  }
 }

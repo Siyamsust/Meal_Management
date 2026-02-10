@@ -12,10 +12,10 @@ const messSchema = new mongoose.Schema({
         meal:{type:Number,
             default:0
         },
-        remmoney:{type:Float16Array,
+        remmoney:{type:mongoose.Schema.Types.Decimal128,
             default:0
         },
-        mealrate:{type:Float16Array,
+        mealrate:{type:mongoose.Schema.Types.Decimal128,
             default:0
         },
     }],

@@ -13,6 +13,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../../../Context/Authcontext";
 import TabNavigator from "./Tabnavigator";
+import ManagerDashboard from "../Manager_home/Manager_home";
 
 
 const Stack = createStackNavigator();
