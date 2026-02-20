@@ -8,20 +8,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthContext } from "../../../Context/Authcontext";
 import Modali from "./Modal";
+import AddCash from "../../Modals/AddCashModal/AddCashModal";
 import CreateMessModal from "../../CreateMessModal/CreateMessModal";
 import ManagerDashboard from "../Manager_home/Manager_home";
 const Tab = createBottomTabNavigator();
 
 // Dummy component for Plus button
 const PlusButtonScreen = () => null;
-
+const CashbuttonClicked=()=>null;
 export default function TabNavigator() {
   const { isLoggedIn } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [showCreateMessModal, setShowCreateMessModal] = useState(false);
-
+  const [showCashModal,setShowCashModal]=useState(false);
   useEffect(() => {
     loadUserData();
   }, []);
@@ -53,6 +54,10 @@ export default function TabNavigator() {
   if (userData) {
     console.log("User Mess:", userData.mess);
   }
+  const handleCashClick=()=>{
+    setShowCashModal(true);
+  }
+
   const handleMessCreated = (updatedUser) => {
     setUserData(updatedUser);
     setShowCreateMessModal(false);
@@ -125,17 +130,28 @@ export default function TabNavigator() {
             children={() => <ManagerDashboard userData={userData} />}
           />
         ) : (
-          <Tab.Screen name="Home" component={Memberhome} />
+          <Tab.Screen name="Home" children={()=><Memberhome userData={userData} />}/>
         )}
         
         {userData?.isManager  && (
-          <Tab.Screen name="Cash" component={Memberhome} />
+          <Tab.Screen name="Cash" 
+          component={CashbuttonClicked}
+          listeners={{
+              tabPress: (e) => {
+                e.preventDefault();
+                handleCashClick();
+              },
+            }}
+            options={{
+              tabBarLabel: "Cash",
+            }}
+            />
         )}
         {userData?.isManager  && (
-          <Tab.Screen name="AddMeal" component={Memberhome} />
+          <Tab.Screen name="AddMeal" children={()=><Memberhome userData={userData} />} />
         )}
         {userData?.mess ? (
-          <Tab.Screen name="Activity" component={Memberhome} />
+          <Tab.Screen name="Activity" children={()=><Memberhome userData={userData} />} />
         ) : (
           <Tab.Screen 
             name="AddMess" 
@@ -152,7 +168,7 @@ export default function TabNavigator() {
           />
         )}
         
-        <Tab.Screen name="Chat" component={Memberhome} />
+        <Tab.Screen name="Chat" children={()=><Memberhome userData={userData} />} />
         <Tab.Screen name="settings" component={Settings} />
       </Tab.Navigator>
 
@@ -163,6 +179,11 @@ export default function TabNavigator() {
         onJoinMess={handleJoinMess}
         onCreateMess={handleCreateMessModal}
       />
+     <AddCash
+  showCashModal={showCashModal}
+  onClose={() => setShowCashModal(false)}
+  userData={userData}    // ✅ Pass full userData instead of just mess
+/>
       <CreateMessModal
          visible={showCreateMessModal}
          onClose={() => setShowCreateMessModal(false)}

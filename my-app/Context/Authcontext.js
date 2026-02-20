@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       console.log("how",API_URL)
-      const response = await fetch(`http://192.168.0.101:3000/api/users/signin`, {
+      const response = await fetch(`http://${API_URL}/api/users/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

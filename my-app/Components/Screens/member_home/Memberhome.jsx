@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from './Memberhome.styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-export default function Memberhome() {
+export default function Memberhome({userData}) {
   const navigate = useNavigation();
 
   const summaryData = {
@@ -37,13 +37,13 @@ export default function Memberhome() {
   ];
 
   const maxMealCount = Math.max(...mealTrends.map(m => m.count));
-
+   console.log(userData);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
         <View style={styles.quickStatsContainer}>
-          <Text style={styles.dashboardTitle}>Dashboard</Text>
-
+          <Text style={styles.dashboardTitle}>{userData?.mess?.name}</Text>
+          
           {/* Summary Cards */}
           <View style={styles.summaryCards}>
             <View style={styles.card}>

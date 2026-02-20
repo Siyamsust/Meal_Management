@@ -4,11 +4,11 @@ import { ActivityIndicator } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getApiBase from "../../../utils/apiBase";
-import styles from "./Messmodal";
+import styles from "../ChangeManagerModal/Messmodal";
 import { AuthContext } from "../../../Context/Authcontext";
 import Constants from 'expo-constants';
-export default function ChangeManagerModal({ 
-  showChangeManagerModal, 
+export default function AddCash({ 
+  showCashModal, 
   onClose, 
   userData 
 }) {
@@ -20,10 +20,10 @@ export default function ChangeManagerModal({
   const {setUserData}=useContext(AuthContext);
   // Fetch mess members when modal opens
   useEffect(() => {
-    console.log('Modal visibility changed:', showChangeManagerModal);
+  //  console.log('Modal visibility changed:', showChangeManagerModal);
     console.log('UserData:', userData);
     
-    if (showChangeManagerModal && userData?.mess?.id) {
+    if (showCashModal && userData?.mess?.id) {
       console.log('Fetching mess members...');
       fetchMessMembers();
     } else {
@@ -32,7 +32,7 @@ export default function ChangeManagerModal({
       setMembers([]);
       setSelectedMember(null);
     }
-  }, [showChangeManagerModal]);
+  }, [showCashModal]);
 
   // Fetch all members from the mess
   const fetchMessMembers = async () => {
@@ -74,11 +74,7 @@ export default function ChangeManagerModal({
       console.log('Parsed Members List:', membersList);
   
       // ✅ Filter out current manager (only show non-managers)
-      const filteredMembers = membersList.filter(member => {
-        const isManager =  member.id!==userData._id;
-        console.log(`Member: ${member.name}, isManager: ${isManager}`);
-        return isManager; // Only include non-managers
-      });
+      const filteredMembers = membersList;
   
       console.log('Filtered Members (Non-managers):', filteredMembers); // ✅ Fixed typo: fileteredMember → filteredMembers
       
@@ -130,65 +126,6 @@ export default function ChangeManagerModal({
         },
       ]
     );
-  };
-
-  // Execute manager change API call
-  const executeChangeManager = async () => {
-    setChanging(true);
-    try {
-      const token = await AsyncStorage.getItem('authToken');
-      //const apiBase = await getApiBase();
-
-      console.log('Changing manager to:', selectedMember);
-
-      const response = await fetch(
-        `http://${API_URL}/api/mess/${userData.mess.id}/change-manager`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            newManagerId: selectedMember,
-            oldManagerId: userData._id,
-          }),
-        }
-      );
-      const userDataString = await AsyncStorage.getItem('userId');
-      const currentUserData = JSON.parse(userDataString);
-      const data = await response.json();
-      const updatedUserData = {
-        ...currentUserData,
-        isManager: false
-      };
-      await AsyncStorage.setItem('userId', JSON.stringify(updatedUserData));
-      setUserData(updatedUserData);
-      console.log('Change manager response:', data);
-
-      if (response.ok) {
-        Alert.alert(
-          'Success',
-          'Manager changed successfully! Please restart the app.',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                handleClose();
-                // Optional: Trigger app refresh
-              },
-            },
-          ]
-        );
-      } else {
-        Alert.alert('Error', data.message || 'Failed to change manager');
-      }
-    } catch (error) {
-      console.error('Error changing manager:', error);
-      Alert.alert('Error', `An error occurred: ${error.message}`);
-    } finally {
-      setChanging(false);
-    }
   };
 
   // Close modal handler
@@ -277,7 +214,7 @@ export default function ChangeManagerModal({
 
   return (
     <Modal
-      visible={showChangeManagerModal}
+      visible={showCashModal}
       transparent={true}
       animationType="slide"
       onRequestClose={handleClose}
