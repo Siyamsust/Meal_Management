@@ -24,16 +24,8 @@ const userSchema = new mongoose.Schema({
         ref:'Mess'},
         name:{
             type:String,
-        },
-        meal:{type:Number,
-            default:0
-        },
-        remmoney:{type:mongoose.Schema.Types.Decimal128,
-            default:0
-        },
-        mealrate:{type:mongoose.Schema.Types.Decimal128,
-            default:0
-        }, 
+        }
+     
 },
     imageUrl:{
         type:String,

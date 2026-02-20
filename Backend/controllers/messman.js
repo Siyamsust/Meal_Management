@@ -293,3 +293,85 @@ exports.editMan = async (req, res) => {
     });
   }
 };
+
+exports.addcash = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { memberId, amount } = req.body;
+
+    // Validation
+    if (!memberId || amount === undefined || amount === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'memberId and amount are required'
+      });
+    }
+
+    if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Amount must be a valid positive number'
+      });
+    }
+
+    // Find mess
+    const mess = await Mess.findById(id);
+    if (!mess) {
+      return res.status(404).json({
+        success: false,
+        message: 'Mess not found'
+      });
+    }
+    console.log(memberId);
+    // Find member in mess
+    const memberIndex = mess.members.findIndex(member => 
+      (member.id || member._id).toString() === memberId.toString()
+    );
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: 'Member not found in mess'
+      });
+    }
+
+    // Convert amount to number
+    const cashAmount = parseFloat(amount);
+
+    // Update member's remmoney
+    const currentRemmoney = parseFloat(mess.members[memberIndex].remmoney || 0);
+    mess.members[memberIndex].remmoney = currentRemmoney + cashAmount;
+
+    // Add to messFund for tracking
+    mess.messFund.push({
+      memberId: memberId,
+      amount: cashAmount,
+      date: new Date()
+    });
+
+    // Save mess
+    await mess.save();
+// Return success response
+    return res.status(200).json({
+      success: true,
+      message: `Cash added successfully to ${mess.members[memberIndex].name}`,
+      data: {
+        mess: mess,
+        member: {
+          id: mess.members[memberIndex].id,
+          name: mess.members[memberIndex].name,
+          remmoney: mess.members[memberIndex].remmoney
+        },
+        transactionAmount: cashAmount
+      }
+    });
+
+  } catch (err) {
+    console.error('Error in addcash:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: err.message
+    });
+  }
+};
