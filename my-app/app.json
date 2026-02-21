@@ -24,6 +24,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "PORT": "192.168.0.101:3000",
+      "API_URL": "192.168.0.101:3000",
+      "eas": {
+        "projectId": "7b9ed083-4b58-44ae-80ac-dad5347a7dbe"
+      }
     }
   }
 }

@@ -36,7 +36,7 @@ const LoginPage = () => {
   const{login} =useContext(AuthContext);
   const handleLogin = async () => {
     console.log('waiting');
-   await login({email,password});
+   await login({email,password}, navigation);
   };
 
   return (

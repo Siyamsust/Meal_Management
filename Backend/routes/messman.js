@@ -7,4 +7,5 @@ router.get('/users/search',messmmancontroller.searchMem);
 router.get('/mess/:id/members',messmmancontroller.messMember);
 router.put('/mess/:id/change-manager', messmmancontroller.editMan);
 router.post('/mess/:id/add-cash',messmmancontroller.addcash);
+router.post('/mess/:id/add-meal', messmmancontroller.addmeal);
 module.exports = router;

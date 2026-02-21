@@ -17,18 +17,14 @@ const Settings= () => {
                 { text: "Cancel", style: "cancel" },
                 { 
                     text: "Log Out", 
-                    onPress: async () => {
+                            onPress: async () => {
                         try{
                             await logout();
                             console.log("user logged out");
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'Login' }],
-                            });
                         }
-                        catch
+                        catch (e)
                         {
-console.log("error");
+                          console.log("logout error", e);
                         }
                     } 
                 }

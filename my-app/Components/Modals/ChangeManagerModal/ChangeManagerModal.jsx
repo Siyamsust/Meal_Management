@@ -17,7 +17,7 @@ export default function ChangeManagerModal({
   const [loading, setLoading] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const [changing, setChanging] = useState(false);
-  const {setUserData}=useContext(AuthContext);
+   const {  updateUserData } = useContext(AuthContext);
   // Fetch mess members when modal opens
   useEffect(() => {
     console.log('Modal visibility changed:', showChangeManagerModal);
@@ -155,15 +155,18 @@ export default function ChangeManagerModal({
           }),
         }
       );
-      const userDataString = await AsyncStorage.getItem('userId');
-      const currentUserData = JSON.parse(userDataString);
-      const data = await response.json();
-      const updatedUserData = {
-        ...currentUserData,
-        isManager: false
-      };
-      await AsyncStorage.setItem('userId', JSON.stringify(updatedUserData));
-      setUserData(updatedUserData);
+     const data = await response.json();
+const userDataString = await AsyncStorage.getItem('userId');
+const currentUserData = JSON.parse(userDataString);
+const updatedUserData = {
+    ...currentUserData,
+    isManager: false
+};
+await updateUserData(updatedUserData);
+
+      const newDataString = await AsyncStorage.getItem('userId');
+      console.log("this is"+newDataString); 
+      console.log('AuthContext.setUserData called with:', updatedUserData);
       console.log('Change manager response:', data);
 
       if (response.ok) {

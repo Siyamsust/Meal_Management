@@ -93,7 +93,7 @@ const SignUpPage = ({ navigation }) => {
         const data = await response.json();
         await AsyncStorage.multiSet([
           ["authToken", data.token],
-          ["userEmail", email]
+          ["userId", data.user],
         ]);
 
         Alert.alert(data.message);

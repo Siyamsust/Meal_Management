@@ -375,3 +375,88 @@ exports.addcash = async (req, res) => {
     });
   }
 };
+exports.addmeal = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { memberId, meal } = req.body;
+    console.log(meal);
+    console.log("eita shei");
+
+    // ✅ Fix 1: Replace "amount" with "meal"
+    if (!memberId || meal === undefined || meal === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'memberId and number of meals are required'
+      });
+    }
+
+    // ✅ Fix 2: Replace "amount" with "meal"
+    if (isNaN(parseFloat(meal)) || parseFloat(meal) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'meal must be a valid positive number'
+      });
+    }
+
+    if (isNaN(parseFloat(meal)) || parseFloat(meal) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'meal must be a valid positive number'
+      });
+    }
+
+    // Find mess
+    const mess = await Mess.findById(id);
+    if (!mess) {
+      return res.status(404).json({
+        success: false,
+        message: 'Mess not found'
+      });
+    }
+    console.log(memberId);
+    // Find member in mess
+    const memberIndex = mess.members.findIndex(member => 
+      (member.id || member._id).toString() === memberId.toString()
+    );
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: 'Member not found in mess'
+      });
+    }
+
+    // Convert meal to number
+    const Meals = parseInt(meal);
+
+    // Update member's meal count
+    const currentmeal = parseInt(mess.members[memberIndex].meal || 0);
+    mess.members[memberIndex].meal = currentmeal + Meals;
+
+    // Add to messFund for tracking
+
+    // Save mess
+    await mess.save();
+// Return success response
+    return res.status(200).json({
+      success: true,
+      message: `Meal added successfully to ${mess.members[memberIndex].name}`,
+      data: {
+        mess: mess,
+        member: {
+          id: mess.members[memberIndex].id,
+          name: mess.members[memberIndex].name,
+          meal: mess.members[memberIndex].meal
+        },
+      }
+    });
+
+  } catch (err) {
+    console.error('Error in addcash:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: err.message
+    });
+  }
+};

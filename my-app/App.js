@@ -3,10 +3,10 @@ import React, { useContext, useRef } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider, AuthContext } from "./Context/Authcontext";
+import { navigationRef } from "./utils/NavigationService";
 
 const Appcontent=()=>{
   const {isLoggedIn}=useContext(AuthContext);
-  const navigationRef = useRef(null);
   const onReady = () => {
     const currentRoute = navigationRef.current?.getCurrentRoute();
     console.log('Current Route:', currentRoute?.name);
@@ -33,7 +33,7 @@ const Appcontent=()=>{
     console.log('All Screen Names:', allRoutes);
   };
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
             <StackScreens  />
           </NavigationContainer>
   );
